@@ -34,42 +34,42 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 const dashboardRoutes = [
   {
     path: "/dashboard",
-    name: "Dashboard",
+    name: "Transacciones",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin"
   },
   {
     path: "/user",
-    name: "User Profile",
+    name: "Cuentas",
     icon: Person,
     component: UserProfile,
     layout: "/admin"
   },
   {
     path: "/table",
-    name: "Table List",
+    name: "Facturas",
     icon: "content_paste",
     component: TableList,
     layout: "/admin"
   },
   {
     path: "/typography",
-    name: "Typography",
+    name: "Items",
     icon: LibraryBooks,
     component: Typography,
     layout: "/admin"
   },
   {
     path: "/icons",
-    name: "Icons",
+    name: "Categoria de Transacciones",
     icon: BubbleChart,
     component: Icons,
     layout: "/admin"
   },
   {
     path: "/notifications",
-    name: "Notifications",
+    name: "Categorias de transacciones",
     icon: Notifications,
     component: NotificationsPage,
     layout: "/admin"
