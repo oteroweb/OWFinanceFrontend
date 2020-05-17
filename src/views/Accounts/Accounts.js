@@ -1,13 +1,48 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, {  Component /*  , useState */ } from "react";
 import MUIDataTable from "mui-datatables";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Cities from "./cities";
-import CustomToolbar from "./CustomToolbar";
+// import CustomToolbar from "./CustomToolbar";
+import AlertDialog from "./SimpleDialog.js";
 
-class App extends React.Component {
+
+ import Create from "./Create.js";
+
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+
+
+export default class App extends Component {
+  state = { open: false }
+
+  /*constructor() {
+    super();
+   // let handleToUpdate  = this.handleToUpdate.bind(this)
+     //this.open = false
+
+  } */
+  handleToUpdate(someArg){
+    this.setState({open:true});
+}
+  handler() {
+   /* this.setState({
+      someVar: true
+    }) */
+  }
+
+  componentDidMount() {
+    //var x = this.foo.myFunc();
+    //console.log(x);
+    //this.setState({message: "x"})
+  }
+ 
+  componentDidUpdate() {
+    
+   }
   render() {
+    let handleToUpdate  =   this.handleToUpdate;
+
     const columns = [
       {
         name: "Name",
@@ -121,24 +156,36 @@ class App extends React.Component {
       filterType: "dropdown",
       responsive: "scroll",
       customToolbar: () => {
-        return <CustomToolbar />;
+        return  <AlertDialog  handleToUpdate = {handleToUpdate.bind(this)}  handler = {this.handler}  collapse={this.state.open}   listNameFromParent={"variable padre"}  myFunc={this.handleChildFunc}   ref={(foo) => { this.foo = foo; }} />;
+      },
+      expandableRows: true, // Try Adding This
+      renderExpandableRow: (rowData, rowMeta) => {
+        return (
+          <TableRow>
+            <TableCell colSpan={rowData.length}>
+              Custom expandable row option. Data: {JSON.stringify(rowData)}
+            </TableCell>
+          </TableRow>
+        );
       },
     };
-
+    console.log(this.open)
     return (
-      <MUIDataTable
-        title={"ACME Employee list"}
-        data={data}
-        columns={columns}
-        options={options}
-      />
+      <>
+      <Create open = {this.open} handleToUpdate = {handleToUpdate.bind(this)}  handler = {this.handler}  collapse={this.state.open}></Create>
+        <MUIDataTable
+          title={"Accounts"}
+          data={data}
+          columns={columns}
+          options={options}
+        />
+      </>
     );
   }
 }
 
-
-export default function ContainedButtons() {
-  return(  
-    <App />
-  );
-}
+// export default function ContainedButtons() {
+//   return(  
+//     <App />
+//   );
+// }

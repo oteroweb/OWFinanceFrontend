@@ -1,42 +1,39 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import React, { /* useState ,*/ Component } from "react";
+import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
+const useStyles = theme => ({
+  root: {
+    width: "100%",
+    "& > * + *": { marginTop: theme.spacing(2), },
+  },
+});
 
-export default function AlertDialog() {
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => { setOpen(true);   };
-  const handleClose = () => { setOpen(false);   };
-  return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
+class AlertDialog extends Component {
+
+  myFunc(state) {
+    console.log(state)
+    //this.setState({open: true}) 
+    return state;
+  }
+  //constructor(props) {
+  //  super(props);
+  //}
+  componentDidMount() {
+  }
+  render() {
+    const { classes } = this.props;
+    const handleToUpdate  =   this.props.handleToUpdate
+    return (
+      <Tooltip title={"Crear Cuenta"}>
+          <IconButton className={classes.iconButton} onClick={() => handleToUpdate('true')} >
+            <AddIcon className={classes.deleteIcon}   /> 
+          </IconButton>
+        </Tooltip> )
+  }
 }
+AlertDialog.propTypes = {
+  //myFunc: "holadesdehijo"
+};
+export default withStyles(useStyles)(AlertDialog)
