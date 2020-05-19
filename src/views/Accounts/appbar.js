@@ -4,7 +4,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/core/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = (theme) => ({

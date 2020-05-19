@@ -7,7 +7,7 @@ import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import Accounts from "views/Accounts/Accounts.js";
+import Account from "views/Accounts/index.js";
 import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
@@ -23,10 +23,10 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/user",
+    path: "/cuentas",
     name: "Cuentas",
     icon: Person,
-    component: Accounts,
+    component: Account,
     layout: "/admin"
   },
   {

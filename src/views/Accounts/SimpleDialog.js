@@ -9,12 +9,8 @@ const useStyles = theme => ({
     "& > * + *": { marginTop: theme.spacing(2), },
   },
 });
-
 class AlertDialog extends Component {
-
   myFunc(state) {
-    console.log(state)
-    //this.setState({open: true}) 
     return state;
   }
   //constructor(props) {
