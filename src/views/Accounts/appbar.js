@@ -1,5 +1,5 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Component } from "react";
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Menu from '@material-ui/core/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme) => ({
   grow: {
     flexGrow: 1,
   },
@@ -23,43 +23,41 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
     },
   },
-}));
+});
 
-export default function PrimarySearchAppBar() {
-  const classes = useStyles();
-
-  const handleProfileMenuOpen = (event) => {   };
-
-  const renderMenu = (
-    <Menu
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-    >
-    </Menu>
-  );
-  return (
-    <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              edge="end"
-              aria-label="close"
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {renderMenu}
-    </div>
-  );
+class PrimarySearchAppBar extends Component {
+  constructor(props) {
+    super(props);
+    this.collapseCreate = this.collapseCreate.bind(this);
+  }
+  collapseCreate=(open)=>{this.setState(open);};
+  render() {
+    const { classes, collapseCreate } = this.props;
+    return (
+      <div className={classes.grow}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography className={classes.title} variant="h6" noWrap>
+              Crear Cuenta
+            </Typography>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                edge="end"
+                aria-label="close"
+                aria-haspopup="true"
+                color="inherit"
+                onClick={() => {
+                  collapseCreate(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit"  />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
 }
+export default withStyles(useStyles)(PrimarySearchAppBar);

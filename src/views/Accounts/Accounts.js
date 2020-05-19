@@ -1,54 +1,37 @@
-import React, {  Component /*  , useState */ } from "react";
+import React, { Component /*  , useState */ } from "react";
 import MUIDataTable from "mui-datatables";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Cities from "./cities";
-// import CustomToolbar from "./CustomToolbar";
 import AlertDialog from "./SimpleDialog.js";
- import Create from "./Create.js";
+import Create from "./Create.js";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-
-
 export default class App extends Component {
-  state = { open: true }
-
+  state = { open: true };
   /*constructor() {
     super();
-   // let handleToUpdate  = this.handleToUpdate.bind(this)
-     //this.open = false
-
+   // let collapseCreate  = this.collapseCreate.bind(this)
   } */
-  handleToUpdate(someArg){
-    this.setState({open:someArg});
-}
-  handler() {
-   /* this.setState({
-      someVar: true
-    }) */
+  collapseCreate(open) {
+    this.setState({ open: open });
   }
-
-  componentDidMount() {
-  }
- 
-  componentDidUpdate() {
-    
-   }
+  componentDidMount() {}
+  componentDidUpdate() {}
   render() {
-    let handleToUpdate  =   this.handleToUpdate;
-
+    let collapseCreate = this.collapseCreate;
     const columns = [
       {
         name: "Name",
         options: {
-          filter: false
-        }
+          filter: false,
+        },
       },
       {
         name: "Title",
         options: {
-          filter: true
-        }
+          filter: true,
+        },
       },
       {
         name: "Location",
@@ -59,17 +42,17 @@ export default class App extends Component {
               <Cities
                 value={value}
                 index={tableMeta.columnIndex}
-                change={event => updateValue(event)}
+                change={(event) => updateValue(event)}
               />
             );
-          }
-        }
+          },
+        },
       },
       {
         name: "Age",
         options: {
-          filter: false
-        }
+          filter: false,
+        },
       },
       {
         name: "Salary",
@@ -80,12 +63,12 @@ export default class App extends Component {
               style: "currency",
               currency: "USD",
               minimumFractionDigits: 2,
-              maximumFractionDigits: 2
+              maximumFractionDigits: 2,
             });
 
             return nf.format(value);
-          }
-        }
+          },
+        },
       },
       {
         name: "Active",
@@ -103,56 +86,47 @@ export default class App extends Component {
                     value={value ? "Yes" : "No"}
                   />
                 }
-                onChange={event => {
+                onChange={(event) => {
                   updateValue(event.target.value === "Yes" ? false : true);
                 }}
               />
             );
-          }
-        }
-      }
+          },
+        },
+      },
     ];
-
     const data = [
       ["Robin Duncan", "Business Analyst", "Los Angeles", 20, 77000, false],
       ["Mel Brooks", "Business Consultant", "Oklahoma City", 37, 135000, true],
       ["Harper White", "Attorney", "Pittsburgh", 52, 420000, false],
-      ["Kris Humphrey", "Agency Legal Counsel", "Laredo", 30, 150000, true],
-      ["Frankie Long", "Industrial Analyst", "Austin", 31, 170000, false],
-      ["Brynn Robbins", "Business Analyst", "Norfolk", 22, 90000, true],
-      ["Justice Mann", "Business Consultant", "Chicago", 24, 133000, false],
-      [ "Addison Navarro", "Business Management Analyst", "New York", 50, 295000, true ],
-      ["Jesse Welch", "Agency Legal Counsel", "Seattle", 28, 200000, false],
-      ["Eli Mejia", "Commercial Specialist", "Long Beach", 65, 400000, true],
-      ["Gene Leblanc", "Industrial Analyst", "Hartford", 34, 110000, false],
-      ["Danny Leon", "Computer Scientist", "Newark", 60, 220000, true],
-      ["Lane Lee", "Corporate Counselor", "Cincinnati", 52, 180000, false],
-      ["Jesse Hall", "Business Analyst", "Baltimore", 44, 99000, true],
-      ["Danni Hudson", "Agency Legal Counsel", "Tampa", 37, 90000, false],
-      ["Terry Macdonald", "Commercial Specialist", "Miami", 39, 140000, true],
-      ["Justice Mccarthy", "Attorney", "Tucson", 26, 330000, false],
-      ["Silver Carey", "Computer Scientist", "Memphis", 47, 250000, true],
-      ["Franky Miles", "Industrial Analyst", "Buffalo", 49, 190000, false],
-      ["Glen Nixon", "Corporate Counselor", "Arlington", 44, 80000, true],
       [
         "Gabby Strickland",
         "Business Process Consultant",
         "Scottsdale",
         26,
         45000,
-        false
+        false,
       ],
-      ["Mason Ray", "Computer Scientist", "San Francisco", 39, 142000, true]
     ];
-
     const options = {
       filter: true,
       filterType: "dropdown",
       responsive: "scroll",
       customToolbar: () => {
-        return  <AlertDialog  handleToUpdate = {handleToUpdate.bind(this)}  handler = {this.handler}  collapse={this.state.open}   listNameFromParent={"variable padre"}  myFunc={this.handleChildFunc}   ref={(foo) => { this.foo = foo; }} />;
+        return (
+          <AlertDialog
+            collapseCreate={collapseCreate.bind(this)}
+            handler={this.handler}
+            collapse={this.state.open}
+            listNameFromParent={"variable padre"}
+            myFunc={this.handleChildFunc}
+            ref={(foo) => {
+              this.foo = foo;
+            }}
+          />
+        );
       },
-      expandableRows: true, // Try Adding This
+      expandableRows: true,
       renderExpandableRow: (rowData, rowMeta) => {
         return (
           <TableRow>
@@ -163,10 +137,15 @@ export default class App extends Component {
         );
       },
     };
-    console.log(this.open)
+    console.log(this.open);
     return (
       <>
-      <Create open = {this.open} handleToUpdate = {handleToUpdate.bind(this)}  handler = {this.handler}  collapse={this.state.open}></Create>
+        <Create
+          open={this.open}
+          collapseCreate={collapseCreate.bind(this)}
+          handler={this.handler}
+          collapse={this.state.open}
+        ></Create>
         <MUIDataTable
           title={"Accounts"}
           data={data}
@@ -179,7 +158,7 @@ export default class App extends Component {
 }
 
 // export default function ContainedButtons() {
-//   return(  
+//   return(
 //     <App />
 //   );
 // }

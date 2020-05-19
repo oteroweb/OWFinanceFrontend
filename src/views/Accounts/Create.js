@@ -15,7 +15,7 @@ import SaveIcon from "@material-ui/icons/Save";
 const useStyles = (theme) => ({
   root: {
     "& > *": {
-      margin: theme.spacing(3),
+      margin: theme.spacing(0),
     },
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
@@ -23,7 +23,7 @@ const useStyles = (theme) => ({
     },
     flexGrow: 1,
     margin: theme.spacing(0),
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(3, 0),
   },
   paper: {
     textAlign: "center",
@@ -58,7 +58,7 @@ class Create extends Component {
     this.setState({ currency: event.target.value });
   }
   render() {
-    const { classes, handleToUpdate } = this.props;
+    const { classes, collapseCreate } = this.props;
     const openfrom = this.props.collapse;
     return (
       <>
@@ -67,17 +67,7 @@ class Create extends Component {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper elevation={3} className={classes.paper}>
-                  <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                      handleToUpdate(false);
-                    }}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>
-                  <PrimarySearchAppBar />
+                  <PrimarySearchAppBar collapseCreate = {collapseCreate.bind(this)}/>
                   <form className={classes.root} noValidate autoComplete="off">
                     <TextField
                       id="standard-basic"
@@ -134,7 +124,7 @@ class Create extends Component {
                       className={classes.button}
                       startIcon={<SaveIcon />}
                     >
-                      Save
+                      Guardar
                     </Button>
                   </form>
                 </Paper>
