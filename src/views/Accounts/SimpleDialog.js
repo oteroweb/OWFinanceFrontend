@@ -27,7 +27,7 @@ class AlertDialog extends Component {
     const handleToUpdate  =   this.props.handleToUpdate
     return (
       <Tooltip title={"Crear Cuenta"}>
-          <IconButton className={classes.iconButton} onClick={() => handleToUpdate('true')} >
+          <IconButton className={classes.iconButton} onClick={() => handleToUpdate(true)} >
             <AddIcon className={classes.deleteIcon}   /> 
           </IconButton>
         </Tooltip> )

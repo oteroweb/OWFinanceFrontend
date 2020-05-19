@@ -5,16 +5,13 @@ import Switch from "@material-ui/core/Switch";
 import Cities from "./cities";
 // import CustomToolbar from "./CustomToolbar";
 import AlertDialog from "./SimpleDialog.js";
-
-
  import Create from "./Create.js";
-
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 
 
 export default class App extends Component {
-  state = { open: false }
+  state = { open: true }
 
   /*constructor() {
     super();
@@ -23,7 +20,7 @@ export default class App extends Component {
 
   } */
   handleToUpdate(someArg){
-    this.setState({open:true});
+    this.setState({open:someArg});
 }
   handler() {
    /* this.setState({
@@ -32,9 +29,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    //var x = this.foo.myFunc();
-    //console.log(x);
-    //this.setState({message: "x"})
   }
  
   componentDidUpdate() {
