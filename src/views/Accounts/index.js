@@ -1,67 +1,112 @@
-import React, { Component /*  , useState */ } from "react";
+// essential
+import React, { Component } from "react";
 import MUIDataTable from "mui-datatables";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import Cities from "./cities";
-import AlertDialog from "./SimpleDialog.js";
-import Create from "./Create.js";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
- class App extends Component {
-  state = { open: true };
-  /*constructor() {
-    super();
-   // let collapseCreate  = this.collapseCreate.bind(this)
-  } */
+import axios from "axios";
+import API from './api.js';
+
+
+import Cities from "./cities.js";
+import AlertDialog from "./SimpleDialog.js";
+import Create from "./Create.js";
+
+
+class App extends Component {
+  onChangeHandle = (event) => {
+    this.setState({ UserName: event.target.value });
+  }
+  getData = async event => {
+    await API.get(`accounts/all`).then((res) => {
+      const accounts = res.data.data;
+      this.setState({accounts});
+    });
+  };
+
+  handleSubmit = async event => {
+    const data = {
+      name:"banesco" , 
+      initial:'0.00',
+      current:'00.00',
+      rate:2313,
+      customer_id:1,
+      currency_id:112, 
+      active:1
+    };
+    await API.post(`accounts/save`,data).then((res) => {
+      this.setState(previousState => ({ accounts: [...previousState.accounts, data] }));
+      this.setState({open:false});
+
+    });
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      accounts:[],
+      form: {
+        name:'',
+        initial:'',
+        rate:'',
+        currency_id:'',
+        customer_id:'',
+      },
+    }
+    this.getData();
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+  }
+  
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
   collapseCreate(open) {
     this.setState({ open: open });
   }
   componentDidMount() {}
-  componentDidUpdate() {}
+  componentDidUpdate() { }
   render() {
+    const accounts = [null];
+    console.log(this.state.accounts);
     let collapseCreate = this.collapseCreate;
     const columns = [
       {
-        name: "Nombre",
+        name: "name",
+        label: "Nombre de la Cuenta",
         options: {
           filter: false,
         },
       },
       {
-        name: "Title",
-        options: {
-          filter: true,
-        },
-      },
-      {
-        name: "Location",
-        options: {
-          filter: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <Cities
-                value={value}
-                index={tableMeta.columnIndex}
-                change={(event) => updateValue(event)}
-              />
-            );
-          },
-        },
-      },
-      {
-        name: "Saldo Inicial",
+        name: "initial",
+        label: "Saldo Inicial",
         options: {
           filter: false,
         },
       },
       {
-        name: "Saldo Actual",
+        name: "rate",
+        label: "Tasa",
+        options: {
+          filter: false,
+        },
+      },
+      {
+        label: "Saldo Actual",
+        name: "current",
         options: {
           filter: true,
           customBodyRender: (value, tableMeta, updateValue) => {
+            let currency
+            if(tableMeta.rowData[4] == 1) currency = "USD"
+            if(tableMeta.rowData[4] == 2) currency = "EUR"
+            if(tableMeta.rowData[4] == 112) currency = "VES"
             const nf = new Intl.NumberFormat("en-US", {
               style: "currency",
-              currency: "USD",
+              currency,
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             });
@@ -70,23 +115,38 @@ import TableCell from "@material-ui/core/TableCell";
         },
       },
       {
-        name: "Active",
+        name: "customer_id",
+        label: "Dueño",
+        options: {
+          filter: true,
+        },
+      },
+      {
+        name: "currency_id",
+        label: "Moneda",
+        options: {
+          filter: true,
+        },
+      },
+      {
+        name: "active",
+        label: "Activada",
         options: {
           filter: true,
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <FormControlLabel
-                label={value ? "Yes" : "No"}
-                value={value ? "Yes" : "No"}
+                label={value ? "Si" : "No"}
+                value={value ? "Si" : "No"}
                 control={
                   <Switch
                     color="primary"
                     checked={value}
-                    value={value ? "Yes" : "No"}
+                    value={value ? "Si" : "No"}
                   />
                 }
                 onChange={(event) => {
-                  updateValue(event.target.value === "Yes" ? false : true);
+                  updateValue(event.target.value === "Si" ? false : true);
                 }}
               />
             );
@@ -94,9 +154,7 @@ import TableCell from "@material-ui/core/TableCell";
         },
       },
     ];
-    const data = [
-      ["Robin Duncan", "Business Analyst", "Los Angeles", 20, 77000, false],
-    ];
+
     const options = {
       filter: true,
       filterType: "dropdown",
@@ -105,10 +163,8 @@ import TableCell from "@material-ui/core/TableCell";
         return (
           <AlertDialog
             collapseCreate={collapseCreate.bind(this)}
-            handler={this.handler}
             collapse={this.state.open}
             listNameFromParent={"variable padre"}
-            myFunc={this.handleChildFunc}
             ref={(foo) => {
               this.foo = foo;
             }}
@@ -129,14 +185,15 @@ import TableCell from "@material-ui/core/TableCell";
     return (
       <>
         <Create
+          onSubmit={this.handleSubmit}
           open={this.open}
+          form = {this.state.form}
           collapseCreate={collapseCreate.bind(this)}
-          handler={this.handler}
           collapse={this.state.open}
         ></Create>
         <MUIDataTable
           title={"Accounts"}
-          data={data}
+          data={this.state.accounts}
           columns={columns}
           options={options}
         />
