@@ -31,70 +31,59 @@ const useStyles = (theme) => ({
 });
 
 class Create extends Component {
+  handleChange = event => {
+    console.log(event.target.id,event.target.value)
+    this.setState({ [event.target.id]: event.target.value });
+  }
+  handleSubmit = event => {
+    event.preventDefault();
+    const data = {
+      name: this.state.formName,
+      initial: this.state.formInitial,
+      current: this.state.formCurrent,
+      rate: this.state.formRate,
+      customer_id: this.state.formCustomerId,
+      currency_id: this.state.formCurrencyId,
+      active: 1,
+    };
+    console.log(data);
+    API.post(`accounts/save`, data).then((res) => {
+      this.setState ({
+        formName: "",
+        formInitial: 0,
+        formCurrent: 0,
+        formRate: 122,
+        formCustomerId: 1,
+        formCurrencyId: 112,
+        formActive: 1,
+      })
+      this.props.updateData(data)
+      this.props.collapseCreate(false)
+      }
+    );
+  };
+
   constructor(props) {
     super(props);
-    console.log(this.state);
-    this.state = {
-      currency: 1,
-      currencies: [],
-      customers: [],
-      customer: '',
-    };
-    console.log(this.state);
-
-    this.handleChange = this.handleChange.bind(this);
+    this.state = this.props.state;
+    this.getCurrenciesActive();
+    this.getCustomersActive();
   }
-  state = this.getInitState()
-
-  getInitState() {
-    const { form } = this.props
-    return form ? form : {
-      name: '',
-      initial: '',
-      rate: '',
-      currency_id: '',
-      customer_id: '',
-    }
-  }
-  getCurrenciesActive = async event => {
-    await API.get(`currencies/all_active`).then((res) => {
+  getCurrenciesActive = event => {
+    API.get(`currencies/all_active`).then((res) => {
       const currencies = res.data.data;
       this.setState({ currencies });
       this.setState({ currency: currencies[0].id });
     });
   };
-  getCustomersActive = async event => {
-    await API.get(`customers/all`).then((res) => {
+  getCustomersActive = event => {
+    API.get(`customers/all`).then((res) => {
       const customers = res.data.data;
       this.setState({ customers });
       this.setState({ customer: customers[0].id });
     });
   };
-  componentDidMount() {
-    this.getCurrenciesActive();
-    this.getCustomersActive();
-    axios.get(`http://localhost:8001/api/1.0/customers/all`).then((res) => {
-
-    });
-  }
-  handleChange = name => ({ target: { value } }) => {
-    this.setState({
-      form: {
-        [name]: value
-      }
-    })
-  }
-  handleSubmit = () => {
-    // TODO: validate
-    this.props.onSubmit({
-      //id: this.state.title.toLocaleLowerCase().replace(/ /g,'-'),
-      ...this.state
-
-    })
-
-    this.setState(this.getInitState())
-  }
-
+  componentDidMount() { }
   render() {
     const { classes, collapseCreate } = this.props;
     const openfrom = this.props.collapse;
@@ -106,63 +95,74 @@ class Create extends Component {
               <Grid item xs={12}>
                 <Paper elevation={3} className={classes.paper}>
                   <PrimarySearchAppBar collapseCreate={collapseCreate.bind(this)} />
-                  <form className={classes.root} noValidate autoComplete="off">
+                  <form className={classes.root} noValidate autoComplete="off" 
+                  onSubmit={this.handleSubmit}
+                  >
                     <TextField
-                      id="standard-basic"
-                      onChange={this.handleChange('name')}
+                      required
+                      id="formName"
+                      className={classes.textField}
+                      onChange={this.handleChange} 
+                      defaultValue={this.state.formName}
                       label="Nombre de la cuenta"
+                      value={this.state.formName}
                     />
                     <TextField
-                      id="outlined-basic-initial"
-                      onChange={this.handleChange('initial')}
+                      id="formInitial"
+                      onChange={this.handleChange} 
                       label="Saldo Inicial"
                       variant="outlined"
-                      defaultValue={0}
+                      defaultValue={this.state.formInitial}
+                      value={this.state.formInitial}
                     />
                     <TextField
-                      id="outlined-basic-rate"
-                      onChange={this.handleChange('rate')}
+                      id="formRate"
+                      onChange={this.handleChange} 
                       label="Tasa"
                       variant="outlined"
-                      defaultValue={1}
+                      defaultValue={this.state.formRate}
+                      value={this.state.formRate}
                     />
                     <TextField
-                      id="outlined-select-currency"
+                      id="formCurrencyId"
                       select
-                      onChange={this.handleChange('currency')}
+                      onChange={this.handleChange} 
                       label="Moneda"
-                      defaultValue={parseInt(this.state.currency)}
+                      defaultValue={this.state.formCurrencyId}
                       helperText="Please select your currency"
                       variant="outlined"
+                      value={this.state.formCurrencyId}
                     >
                       {this.state.currencies.map((option) => (
                         <MenuItem key={parseInt(option.id)} value={parseInt(option.id)}>{option.name}</MenuItem>
                       ))}
                     </TextField>
-                    <TextField
-                      id="outlined-select-customer"
+                     <TextField
+                      id="formCustomerId"
                       select
-                      onChange={this.handleChange('customer')}
+                      onChange={this.handleChange} 
                       label="Cliente"
-                      defaultValue={1}
+                      defaultValue={this.state.formCustomerId}
                       readOnly
                       helperText="Please select your Customer"
                       variant="outlined"
+                      value={this.state.formCustomerId}
                     >
                       {this.state.customers.map((option) => (
                         <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
                       ))}
-                    </TextField>
+                    </TextField> 
                     <Button
                       variant="contained"
                       color="primary"
                       size="large"
-                      onClick={this.handleSubmit}
+                      type="submit" 
                       className={classes.button}
                       startIcon={<SaveIcon />}
                     >
                       Guardar
                     </Button>
+          
                   </form>
                 </Paper>
               </Grid>
@@ -175,5 +175,6 @@ class Create extends Component {
 }
 
 Create.propTypes = {
+  //classes: PropTypes.object.isRequired
 };
 export default withStyles(useStyles)(Create);

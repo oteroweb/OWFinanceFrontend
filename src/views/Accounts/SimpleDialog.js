@@ -20,10 +20,9 @@ class AlertDialog extends Component {
   }
   render() {
     const { classes } = this.props;
-    const collapseCreate  =   this.props.collapseCreate;
     return (
       <Tooltip title={"Crear Cuenta"}>
-          <IconButton className={classes.iconButton} onClick={() => collapseCreate(true)} >
+          <IconButton className={classes.iconButton} onClick={() => this.props.collapseCreate(true)} >
             <AddIcon className={classes.deleteIcon}   /> 
           </IconButton>
         </Tooltip> )

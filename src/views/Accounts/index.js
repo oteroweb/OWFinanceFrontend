@@ -9,7 +9,6 @@ import axios from "axios";
 import API from './api.js';
 
 
-import Cities from "./cities.js";
 import AlertDialog from "./SimpleDialog.js";
 import Create from "./Create.js";
 
@@ -21,57 +20,40 @@ class App extends Component {
   getData = async event => {
     await API.get(`accounts/all`).then((res) => {
       const accounts = res.data.data;
-      this.setState({accounts});
+      this.setState({ accounts });
     });
   };
 
-  handleSubmit = async event => {
-    const data = {
-      name:"banesco" , 
-      initial:'0.00',
-      current:'00.00',
-      rate:2313,
-      customer_id:1,
-      currency_id:112, 
-      active:1
-    };
-    await API.post(`accounts/save`,data).then((res) => {
-      this.setState(previousState => ({ accounts: [...previousState.accounts, data] }));
-      this.setState({open:false});
-
-    });
-  };
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      accounts:[],
-      form: {
-        name:'',
-        initial:'',
-        rate:'',
-        currency_id:'',
-        customer_id:'',
-      },
+      accounts: [],
+      formName: "",
+      formInitial: 0,
+      formCurrent: 0,
+      formRate: 122,
+      formCustomerId: 1,
+      formCurrencyId: 112,
+      formActive: "",
+      currencies: [],
+      customers: [],
     }
     this.getData();
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
 
-  }
-  
-  handleChange(event) {
-    this.setState({value: event.target.value});
   }
   collapseCreate(open) {
     this.setState({ open: open });
   }
-  componentDidMount() {}
+  updateData(data) {
+    this.setState(previousState => ({ accounts: [...previousState.accounts, data] }));
+  }
+  updateForm(data) {
+    this.setState({formName:''});
+  }
+  componentDidMount() { }
   componentDidUpdate() { }
   render() {
-    const accounts = [null];
-    console.log(this.state.accounts);
-    let collapseCreate = this.collapseCreate;
     const columns = [
       {
         name: "name",
@@ -101,9 +83,9 @@ class App extends Component {
           filter: true,
           customBodyRender: (value, tableMeta, updateValue) => {
             let currency
-            if(tableMeta.rowData[4] == 1) currency = "USD"
-            if(tableMeta.rowData[4] == 2) currency = "EUR"
-            if(tableMeta.rowData[4] == 112) currency = "VES"
+            if (tableMeta.rowData[4] == 1) currency = "USD"
+            if (tableMeta.rowData[4] == 2) currency = "EUR"
+            if (tableMeta.rowData[4] == 112) currency = "VES"
             const nf = new Intl.NumberFormat("en-US", {
               style: "currency",
               currency,
@@ -154,7 +136,6 @@ class App extends Component {
         },
       },
     ];
-
     const options = {
       filter: true,
       filterType: "dropdown",
@@ -162,9 +143,10 @@ class App extends Component {
       customToolbar: () => {
         return (
           <AlertDialog
-            collapseCreate={collapseCreate.bind(this)}
+            collapseCreate={this.collapseCreate.bind(this)}
             collapse={this.state.open}
-            listNameFromParent={"variable padre"}
+            state={this.state}
+          listNameFromParent={"variable padre"}
             ref={(foo) => {
               this.foo = foo;
             }}
@@ -185,10 +167,10 @@ class App extends Component {
     return (
       <>
         <Create
-          onSubmit={this.handleSubmit}
-          open={this.open}
-          form = {this.state.form}
-          collapseCreate={collapseCreate.bind(this)}
+          state={this.state}
+          updateData={this.updateData.bind(this)}
+          updateForm={this.updateForm.bind(this)}
+          collapseCreate={this.collapseCreate.bind(this)}
           collapse={this.state.open}
         ></Create>
         <MUIDataTable
