@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Collapse from "@material-ui/core/Collapse";
-import PrimarySearchAppBar from "./appbar.js";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import axios from "axios";
+import { TextField, Collapse, Grid, Paper, Button, MenuItem,  } from '@material-ui/core';
 import SaveIcon from "@material-ui/icons/Save";
+
+import PrimarySearchAppBar from "./appbar.js";
 import API from './api.js';
 
 const useStyles = (theme) => ({
@@ -31,9 +26,9 @@ const useStyles = (theme) => ({
 });
 
 class Create extends Component {
-  handleChange = event => {
-    console.log(event.target.id,event.target.value)
-    this.setState({ [event.target.id]: event.target.value });
+  handleChange = (event, value) => {
+    this.setState({ [value]: event.target.value });
+    console.log(value,event.target.value)
   }
   handleSubmit = event => {
     event.preventDefault();
@@ -42,27 +37,26 @@ class Create extends Component {
       initial: this.state.formInitial,
       current: this.state.formCurrent,
       rate: this.state.formRate,
-      customer_id: this.state.formCustomerId,
       currency_id: this.state.formCurrencyId,
+      customer_id: this.state.formCustomerId,
       active: 1,
     };
-    console.log(data);
+  
     API.post(`accounts/save`, data).then((res) => {
-      this.setState ({
+      this.setState({
         formName: "",
         formInitial: 0,
         formCurrent: 0,
-        formRate: 122,
-        formCustomerId: 1,
-        formCurrencyId: 112,
+        formRate: 1,
+        formCurrencyId: this.props.state.formCurrencyId,
+        formCustomerId: this.props.state.formCustomerId,
         formActive: 1,
       })
       this.props.updateData(data)
       this.props.collapseCreate(false)
-      }
+    }
     );
   };
-
   constructor(props) {
     super(props);
     this.state = this.props.state;
@@ -83,7 +77,6 @@ class Create extends Component {
       this.setState({ customer: customers[0].id });
     });
   };
-  componentDidMount() { }
   render() {
     const { classes, collapseCreate } = this.props;
     const openfrom = this.props.collapse;
@@ -95,21 +88,21 @@ class Create extends Component {
               <Grid item xs={12}>
                 <Paper elevation={3} className={classes.paper}>
                   <PrimarySearchAppBar collapseCreate={collapseCreate.bind(this)} />
-                  <form className={classes.root} noValidate autoComplete="off" 
-                  onSubmit={this.handleSubmit}
+                  <form className={classes.root} autoComplete="off"
+                    onSubmit={this.handleSubmit}
                   >
                     <TextField
                       required
                       id="formName"
+                      onChange={(event, value) => this.handleChange(event, "formName")}
                       className={classes.textField}
-                      onChange={this.handleChange} 
                       defaultValue={this.state.formName}
                       label="Nombre de la cuenta"
                       value={this.state.formName}
                     />
                     <TextField
                       id="formInitial"
-                      onChange={this.handleChange} 
+                      onChange={(event, value) => this.handleChange(event, "formInitial")}
                       label="Saldo Inicial"
                       variant="outlined"
                       defaultValue={this.state.formInitial}
@@ -117,7 +110,7 @@ class Create extends Component {
                     />
                     <TextField
                       id="formRate"
-                      onChange={this.handleChange} 
+                      onChange={(event, value) => this.handleChange(event, "formRate")}
                       label="Tasa"
                       variant="outlined"
                       defaultValue={this.state.formRate}
@@ -126,43 +119,43 @@ class Create extends Component {
                     <TextField
                       id="formCurrencyId"
                       select
-                      onChange={this.handleChange} 
+                      onChange={(event, value) => this.handleChange(event, "formCurrencyId")}
                       label="Moneda"
                       defaultValue={this.state.formCurrencyId}
                       helperText="Please select your currency"
                       variant="outlined"
                       value={this.state.formCurrencyId}
+                      InputProps={{ readOnly: false, }}
                     >
                       {this.state.currencies.map((option) => (
                         <MenuItem key={parseInt(option.id)} value={parseInt(option.id)}>{option.name}</MenuItem>
                       ))}
                     </TextField>
-                     <TextField
+                    <TextField
                       id="formCustomerId"
                       select
-                      onChange={this.handleChange} 
+                      disabled
+                      onChange={(event, value) => this.handleChange(event, "formCustomerId")}
                       label="Cliente"
-                      defaultValue={this.state.formCustomerId}
-                      readOnly
+                      defaultValue={this.props.state.formCustomerId}
                       helperText="Please select your Customer"
                       variant="outlined"
-                      value={this.state.formCustomerId}
+                      value={this.props.state.formCustomerId}
                     >
                       {this.state.customers.map((option) => (
                         <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
                       ))}
-                    </TextField> 
+                    </TextField>
                     <Button
                       variant="contained"
                       color="primary"
                       size="large"
-                      type="submit" 
+                      type="submit"
                       className={classes.button}
                       startIcon={<SaveIcon />}
                     >
                       Guardar
                     </Button>
-          
                   </form>
                 </Paper>
               </Grid>

@@ -1,29 +1,14 @@
 // essential
 import React, { Component } from "react";
 import MUIDataTable from "mui-datatables";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import axios from "axios";
+import {Switch, TableRow,  TableCell, FormControlLabel} from "@material-ui/core";
 import API from './api.js';
-
-
 import AlertDialog from "./SimpleDialog.js";
 import Create from "./Create.js";
 
 
 class App extends Component {
-  onChangeHandle = (event) => {
-    this.setState({ UserName: event.target.value });
-  }
-  getData = async event => {
-    await API.get(`accounts/all`).then((res) => {
-      const accounts = res.data.data;
-      this.setState({ accounts });
-    });
-  };
-
+ 
   constructor(props) {
     super(props);
     this.state = {
@@ -32,27 +17,32 @@ class App extends Component {
       formName: "",
       formInitial: 0,
       formCurrent: 0,
-      formRate: 122,
+      formRate: 1,
       formCustomerId: 1,
-      formCurrencyId: 112,
+      formCurrencyId: 1,
       formActive: "",
       currencies: [],
       customers: [],
     }
     this.getData();
-
   }
+  getData = async event => {
+    await API.get(`accounts/all`).then((res) => {
+      const accounts = res.data.data;
+      this.setState({ accounts });
+      this.setState({ formCurrencyId:accounts[0].customer.currency_id });
+      this.setState({ formCustomerId:accounts[0].customer.id });
+    });
+  };
   collapseCreate(open) {
     this.setState({ open: open });
   }
   updateData(data) {
     this.setState(previousState => ({ accounts: [...previousState.accounts, data] }));
   }
-  updateForm(data) {
-    this.setState({formName:''});
-  }
+
   componentDidMount() { }
-  componentDidUpdate() { }
+  componentDidUpdate() {  }
   render() {
     const columns = [
       {
@@ -67,6 +57,19 @@ class App extends Component {
         label: "Saldo Inicial",
         options: {
           filter: false,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            let currency
+            if (tableMeta.rowData[5] === 1) currency = "USD"
+            if (tableMeta.rowData[5] === 3) currency = "EUR"
+            if (tableMeta.rowData[5] === 112) currency = "VES"
+            const nf = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
+            return nf.format(value);
+          },
         },
       },
       {
@@ -74,6 +77,19 @@ class App extends Component {
         label: "Tasa",
         options: {
           filter: false,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            let currency
+            if (tableMeta.rowData[5] === 1) currency = "USD"
+            if (tableMeta.rowData[5] === 3) currency = "EUR"
+            if (tableMeta.rowData[5] === 112) currency = "VES"
+            const nf = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
+            return nf.format(value);
+          },
         },
       },
       {
@@ -83,9 +99,9 @@ class App extends Component {
           filter: true,
           customBodyRender: (value, tableMeta, updateValue) => {
             let currency
-            if (tableMeta.rowData[4] == 1) currency = "USD"
-            if (tableMeta.rowData[4] == 2) currency = "EUR"
-            if (tableMeta.rowData[4] == 112) currency = "VES"
+            if (tableMeta.rowData[5] === 1) currency = "USD"
+            if (tableMeta.rowData[5] === 3) currency = "EUR"
+            if (tableMeta.rowData[5] === 112) currency = "VES"
             const nf = new Intl.NumberFormat("en-US", {
               style: "currency",
               currency,
@@ -146,10 +162,6 @@ class App extends Component {
             collapseCreate={this.collapseCreate.bind(this)}
             collapse={this.state.open}
             state={this.state}
-          listNameFromParent={"variable padre"}
-            ref={(foo) => {
-              this.foo = foo;
-            }}
           />
         );
       },
@@ -169,7 +181,6 @@ class App extends Component {
         <Create
           state={this.state}
           updateData={this.updateData.bind(this)}
-          updateForm={this.updateForm.bind(this)}
           collapseCreate={this.collapseCreate.bind(this)}
           collapse={this.state.open}
         ></Create>
