@@ -30,8 +30,13 @@ class App extends Component {
     await API.get(`accounts/all`).then((res) => {
       const accounts = res.data.data;
       this.setState({ accounts });
-      this.setState({ formCurrencyId:accounts[0].customer.currency_id });
-      this.setState({ formCustomerId:accounts[0].customer.id });
+      if(accounts.length > 0){
+        this.setState({ formCurrencyId:accounts[0].customer.currency_id });
+        this.setState({ formCustomerId:accounts[0].customer.id });
+      }
+      else{
+        console.log("no hay cuentas, #pendiente por hacer un redirect")
+      }
     });
   };
   collapseCreate(open) {

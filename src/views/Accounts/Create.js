@@ -41,7 +41,7 @@ class Create extends Component {
       customer_id: this.state.formCustomerId,
       active: 1,
     };
-  
+
     API.post(`accounts/save`, data).then((res) => {
       this.setState({
         formName: "",
@@ -66,15 +66,25 @@ class Create extends Component {
   getCurrenciesActive = event => {
     API.get(`currencies/all_active`).then((res) => {
       const currencies = res.data.data;
-      this.setState({ currencies });
+      if(currencies.length > 0){
+        this.setState({ currencies });
       this.setState({ currency: currencies[0].id });
+      }
+      else{
+        console.log("no hay currencies, #pendiente por hacer un redirect")
+      }
     });
   };
   getCustomersActive = event => {
     API.get(`customers/all`).then((res) => {
       const customers = res.data.data;
-      this.setState({ customers });
-      this.setState({ customer: customers[0].id });
+      if(customers.length > 0){
+        this.setState({ customers });
+        this.setState({ customer: customers[0].id });
+      }
+      else{
+        console.log("no hay customers, #pendiente por hacer un redirect")
+      }
     });
   };
   render() {
