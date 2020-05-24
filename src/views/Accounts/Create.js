@@ -4,6 +4,7 @@ import { TextField, Collapse, Grid, Paper, Button, MenuItem,  } from '@material-
 import SaveIcon from "@material-ui/icons/Save";
 
 import PrimarySearchAppBar from "./appbar.js";
+import FormattedInputs from "./currencyfield.js";
 import API from './api.js';
 
 const useStyles = (theme) => ({
@@ -28,7 +29,6 @@ const useStyles = (theme) => ({
 class Create extends Component {
   handleChange = (event, value) => {
     this.setState({ [value]: event.target.value });
-    console.log(value,event.target.value)
   }
   handleSubmit = event => {
     event.preventDefault();
@@ -100,7 +100,7 @@ class Create extends Component {
                       label="Nombre de la cuenta"
                       value={this.state.formName}
                     />
-                    <TextField
+                    <FormattedInputs
                       id="formInitial"
                       onChange={(event, value) => this.handleChange(event, "formInitial")}
                       label="Saldo Inicial"
@@ -108,7 +108,7 @@ class Create extends Component {
                       defaultValue={this.state.formInitial}
                       value={this.state.formInitial}
                     />
-                    <TextField
+                    <FormattedInputs
                       id="formRate"
                       onChange={(event, value) => this.handleChange(event, "formRate")}
                       label="Tasa"
@@ -125,7 +125,6 @@ class Create extends Component {
                       helperText="Please select your currency"
                       variant="outlined"
                       value={this.state.formCurrencyId}
-                      InputProps={{ readOnly: false, }}
                     >
                       {this.state.currencies.map((option) => (
                         <MenuItem key={parseInt(option.id)} value={parseInt(option.id)}>{option.name}</MenuItem>
@@ -134,16 +133,15 @@ class Create extends Component {
                     <TextField
                       id="formCustomerId"
                       select
-                      disabled
                       onChange={(event, value) => this.handleChange(event, "formCustomerId")}
                       label="Cliente"
-                      defaultValue={this.props.state.formCustomerId}
+                      defaultValue={this.state.formCustomerId}
                       helperText="Please select your Customer"
                       variant="outlined"
-                      value={this.props.state.formCustomerId}
+                      value={this.state.formCustomerId}
                     >
                       {this.state.customers.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+                        <MenuItem key={parseInt(option.id)} value={parseInt(option.id)}>{option.name}</MenuItem>
                       ))}
                     </TextField>
                     <Button
